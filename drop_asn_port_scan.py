@@ -63,12 +63,14 @@ def iprange2ips(ipRanges):
 
 def main():
     ASNLIST = getDropASN()
+    print(f"Found {len(ASNLIST)} ASN's from the drop list")
     IPRANGES = asn2range(ASNLIST)
     #IPS = iprange2ips(IPRANGES)
 
     # Foreach ip range, run masscan to see if ports 80, 8080, 443 or 8443 are open
     for iprange in IPRANGES:
         mas = masscan.PortScanner()
+        print(f"Scanning {iprange}")
         mas.scan(iprange, ports='80,8080,443,8443', arguments='--max-rate 1000')
         iprangeF = iprange.replace("/","_")
         with open(f"out/{iprangeF}","w") as oF:
