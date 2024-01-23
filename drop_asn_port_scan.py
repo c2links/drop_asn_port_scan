@@ -6,9 +6,7 @@ import masscan
 import logging
 from datetime import datetime
 
-logging.basicConfig(filename='asnPortScan.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
-
-
+logging.basicConfig(filename='asnPortScan.log', filemode='w', level =  logging.INFO , format='%(name)s - %(levelname)s - %(message)s')
 
 # Description: Saves ASN and RIR from the Spamhaus ASN Drop list from https://www.spamhaus.org/drop/asndrop.json
 # Input: None
@@ -68,21 +66,25 @@ def iprange2ips(ipRanges):
     return ips
 
 def main():
+
     logging.info(f"Started at {datetime.now()}")
     scanout = []
 
     ASNLIST = getDropASN()
     logging.info(f"Found {len(ASNLIST)} ASN's from the drop list")
     IPRANGES = asn2range(ASNLIST)
+    logging.info(f"Found {len(IPRANGES)} IP prefixes")
     #IPS = iprange2ips(IPRANGES)
 
     logging.info("Performing port scans. \n")
+
     # Foreach ip range, run masscan to see if ports 80, 8080, 443 or 8443 are open
+    count = 0
     for iprange in IPRANGES:
+        count += 1
         mas = masscan.PortScanner()
-        logging.info(f"Scanning {iprange}")
-        mas.scan(f'{iprange}', ports='80,8080,443,8443', arguments='--max-rate 1000')
-        iprangeF = iprange.replace("/","_")
+        logging.info(f"Scanning {iprange} ({count} / {len(IPRANGES)})")
+        mas.scan(f'{iprange}', ports='80,8080,443,8443', arguments='--max-rate 10000')
         scanout.append(mas.scan_result)
     
     logging.info("Writing scan data to file\n")
@@ -90,6 +92,7 @@ def main():
     with open(f"out/asn_port_scan.json","w") as oF:
         for so in scanout:
             oF.write(f"{so}\n")
+
     logging.info(f"Finished at {datetime.now()}\n")
 
 if __name__ == "__main__":
