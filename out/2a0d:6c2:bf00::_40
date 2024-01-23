@@ -1,1 +1,0 @@
-{"command_line": "masscan -oJ - 2a0d:6c2:bf00::/40 -p 80,8080,443,8443 --max-rate 10", "scan": {}}

@@ -1,1 +1,0 @@
-{"command_line": "masscan -oJ - 80.82.67.0/24 -p 80,8080,443,8443 --max-rate 10", "scan": {}}
