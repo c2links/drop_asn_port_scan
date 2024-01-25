@@ -65,6 +65,18 @@ def iprange2ips(ipRanges):
             print(e)
     return ips
 
+def cleanOutput(scanout):
+    final = []
+
+    for record in scanout:
+        record = json.loads(record)
+        for k,v in record.items():
+            if k == "scan":
+                print(vv)
+                for kk,vv in v.items():
+                    final.append(dict(ip=kk,ports=vv))
+    return final
+
 def main():
 
     logging.info(f"Started at {datetime.now()}")
@@ -89,9 +101,11 @@ def main():
     
     logging.info("Writing scan data to file\n")
 
+    final = cleanOutput(scanout)
+
     with open(f"out/asn_port_scan.json","w") as oF:
-        for so in scanout:
-            oF.write(f"{so}\n")
+        for record in final:
+            oF.write(f"{record}\n")
 
     logging.info(f"Finished at {datetime.now()}\n")
 
