@@ -2,7 +2,6 @@ import requests
 import json
 import ipaddress
 import pandas as pd
-import masscan
 import logging
 from datetime import datetime
 
@@ -86,26 +85,13 @@ def main():
     logging.info(f"Found {len(ASNLIST)} ASN's from the drop list")
     IPRANGES = asn2range(ASNLIST)
     logging.info(f"Found {len(IPRANGES)} IP prefixes")
-    #IPS = iprange2ips(IPRANGES)
+    IPS = iprange2ips(IPRANGES)
+    logging.info(f"Found {len(IPS)} IP Addresses")
+    logging.info("Writing IP addresses to file\n")
 
-    logging.info("Performing port scans. \n")
-
-    # Foreach ip range, run masscan to see if ports 80, 8080, 443 or 8443 are open
-    count = 0
-    for iprange in IPRANGES:
-        count += 1
-        mas = masscan.PortScanner()
-        logging.info(f"Scanning {iprange} ({count} / {len(IPRANGES)})")
-        mas.scan(f'{iprange}', ports='80,8080,443,8443', arguments='--max-rate 10000')
-        scanout.append(mas.scan_result)
-    
-    logging.info("Writing scan data to file\n")
-
-    final = cleanOutput(scanout)
-
-    with open(f"out/asn_port_scan.json","w") as oF:
-        for record in final:
-            oF.write(f"{record}\n")
+    with open(f"in/ip_addresses.txt","w") as oF:
+        for ip in IPS:
+            oF.write(f"{ip}\n")
 
     logging.info(f"Finished at {datetime.now()}\n")
 
