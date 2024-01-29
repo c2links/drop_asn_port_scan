@@ -1,2 +1,8 @@
-root - INFO - Started at 2024-01-25 20:22:05.300736
+root - INFO - Started at 2024-01-29 08:54:33.837905
 root - INFO - Found 190 ASN's from the drop list
+root - INFO - Found 2292 IP prefixes
+root - INFO - Found 1308672 IP Addresses
+root - INFO - Writing IP addresses to file
+
+root - INFO - Finished at 2024-01-29 08:55:44.102199
+
